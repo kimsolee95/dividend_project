@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.Trie;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,9 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 @Service
-//@AllArgsConstructor
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class CompanyService {
+
+  private final Trie trie;
 
   private final Scraper yahooFinanceScrapper;
   private final CompanyRepository companyRepository;
@@ -58,6 +60,23 @@ public class CompanyService {
 
     this.dividendRepository.saveAll(dividendEntities);
     return company;
+  }
+
+  public void addAutocompleteKeyword(String keyword) {
+    //apach 라이브러리에서 지원하는 trie는 key, value 로 data set할 수 있는 기능도 지원하지만 사용하지 않기로 함
+    this.trie.put(keyword, null);
+  }
+
+  public List<String> autocomplete(String keyword) {
+
+    return (List<String>) this.trie.prefixMap(keyword).keySet()
+        .stream()
+        .limit(8)
+        .collect(Collectors.toList());
+  }
+
+  public void deleteAutocompleteKeyword(String keyword) {
+    this.trie.remove(keyword);
   }
 
 }

@@ -3,9 +3,7 @@ package com.test.dividend.web;
 import com.test.dividend.model.Company;
 import com.test.dividend.persist.entity.CompanyEntity;
 import com.test.dividend.service.CompanyService;
-import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +25,9 @@ public class CompanyController {
 
   @GetMapping("/autocomplete")
   public ResponseEntity<?> autocomplete(@RequestParam String keyword) {
-
-    return null;
+    //개수 제한 있으려면 paging 혹은 stream limit 사용
+    var result = this.companyService.autocomplete(keyword);
+    return ResponseEntity.ok(result);
   }
 
   @GetMapping
@@ -47,6 +46,7 @@ public class CompanyController {
     }
 
     Company company = this.companyService.save(ticker);
+    this.companyService.addAutocompleteKeyword(company.getName()); // 회사명 저장 후, trie에도 이를 저장
     return ResponseEntity.ok(company);
   }
 
