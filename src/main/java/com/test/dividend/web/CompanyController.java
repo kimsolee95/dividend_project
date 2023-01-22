@@ -26,7 +26,7 @@ public class CompanyController {
   @GetMapping("/autocomplete")
   public ResponseEntity<?> autocomplete(@RequestParam String keyword) {
     //개수 제한 있으려면 paging 혹은 stream limit 사용
-    var result = this.companyService.autocomplete(keyword);
+    var result = this.companyService.getCompanyNamesByKeyword(keyword);
     return ResponseEntity.ok(result);
   }
 
