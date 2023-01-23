@@ -11,6 +11,7 @@ import com.test.dividend.scraper.Scraper;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.Trie;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +21,7 @@ import org.springframework.util.ObjectUtils;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class CompanyService {
 
   private final Trie trie;
@@ -98,6 +100,7 @@ public class CompanyService {
 
     //trie data delete
     this.deleteAutocompleteKeyword(company.getName());
+    log.info("delete company Name: {} companyId: {}--->> ", company.getName(), company.getId());
     return company.getName();
   }
 }
