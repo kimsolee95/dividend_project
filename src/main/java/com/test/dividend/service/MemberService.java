@@ -1,5 +1,6 @@
 package com.test.dividend.service;
 
+import com.test.dividend.exception.impl.AlreadyExistUserException;
 import com.test.dividend.model.Auth;
 import com.test.dividend.persist.entity.MemberEntity;
 import com.test.dividend.persist.repository.MemberRepository;
@@ -30,7 +31,7 @@ public class MemberService implements UserDetailsService {
 
     boolean exists = this.memberRepository.existsByUsername(member.getUsername());
     if (exists) {
-      throw new RuntimeException("이미 사용중인 ID입니다.");
+      throw new AlreadyExistUserException();
     }
 
     member.setPassword(this.passwordEncoder.encode(member.getPassword()));
