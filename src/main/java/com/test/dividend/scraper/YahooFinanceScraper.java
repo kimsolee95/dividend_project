@@ -60,10 +60,7 @@ public class YahooFinanceScraper implements Scraper{
           throw new RuntimeException("Unexpected Month enum value -> " + splits[0]);
         }
 
-        dividends.add(Dividend.builder()
-            .date(LocalDateTime.of(year, month, day, 0, 0))
-            .dividend(dividend)
-            .build());
+        dividends.add(new Dividend(LocalDateTime.of(year, month, day, 0, 0), dividend));
       }
       scrapResult.setDividends(dividends);
 
@@ -81,19 +78,11 @@ public class YahooFinanceScraper implements Scraper{
 
     try {
 
-//      Document document = Jsoup.connect(url).get();
-//      Element titleEle = document.getElementsByTag("td").get(0); // 홈페이지 개편한듯;'; (h1태그에서 td로 변경)
-////      String title = titleEle.text().split(" - ")[1].trim();
-//      Element link = titleEle.select("a").first(); //td 내 a 속성 title -> 회사명인듯;;
-//      String title = link.attr("title");
       Document document = Jsoup.connect(url).get();
       Element titleEle = document.getElementsByTag("h1").get(0);
       String title = titleEle.text().split(" - ")[1].trim();
 
-      return Company.builder()
-          .ticker(ticker)
-          .name(title)
-          .build();
+      return new Company(ticker, title);
 
     } catch (IOException e) {
       e.printStackTrace();
